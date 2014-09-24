@@ -1,0 +1,19 @@
+{
+	"name": "TrelloStyle",
+	"version": "1.0",
+	"manifest_version" : 2,
+	
+	"description": "Color and Style Trello Cards",
+	"icons": { "128": "icons/icon128.png" },
+	
+	"content_scripts": [
+		{
+			"matches": ["https://trello.com/*"],
+			"js": ["lib/jquery-1.11.1.min.js",
+                   "content.js"]
+		}
+	],
+    "web_accessible_resources": [
+        "lib/jquery-1.11.1.min.map"]
+	
+}
