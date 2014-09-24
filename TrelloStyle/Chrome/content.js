@@ -4,17 +4,40 @@ function colorTasks() {
 	
 	$("div.list-cards").each(
 		function( index ) {
-			var isAfterDelete = false;
+		
+			var isAfterDone = false;
+			
 			$(this).find("div.list-card").each(
-				function( index2 ){
-					if( isAfterDelete || ! ( $(this).find(":contains('---done---')").length == 0 ) ) {
+				function(index2){
+				
+				var title = $(this).find("div.list-card-details").find("a.list-card-title");
+			
+				var isDone = title.text().match(/-{3,}\s*done\s*-{3,}/i) || title.find("hr").length > 0;
+			
+					if( isAfterDone  ) {
 						$(this).css("background-color","#C3C3C3");
-						isAfterDelete = true;
+					}
+					else if(isDone) {
+					
+						var isStyled = title.find("hr").length > 0;
+					
+						if( ! isStyled ) {
+							
+							title.contents().filter(
+								function(){ 
+								  return this.nodeType == 3; 
+								})[0].nodeValue = "";
+								
+							title.append("<hr />");
+							$(this).css("background-color","#C3C3C3");
+						}
+					
+						isAfterDone = true;
 					}
 					else {
 					
-						var isStory = $(this).find("div.list-card-details").find("a.list-card-title").text().match(/\([0-9]*[.]*[0-9]*\)/i);
-						var isMantis = $(this).find("div.list-card-details").find("a.list-card-title").text().match(/m[0-9]{4,6}/i)
+						var isStory = title.text().match(/\([0-9]*[.]*[0-9]*\)/i);
+						var isMantis = title.text().match(/m[0-9]{4,6}/i);
 					
 						if( isStory )
 						{
