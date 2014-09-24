@@ -1,0 +1,6 @@
+## Git Ignore Files
+
+# User-specific files
+*.pem
+*.crx
+
