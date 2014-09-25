@@ -3,4 +3,5 @@
 # User-specific files
 *.pem
 *.crx
+*.xpi
 

@@ -2,10 +2,9 @@
 
 window.URL = window.webkitURL || window.URL;
 
-
 var storyColor = "white",
-	mantisColor = "#F1A1B1",
-	taskColor = "#DEFFAC",
+	mantisColor = "#D89090"; //"#F1A1B1",
+	taskColor = "#D8E2EE"; //"#DEFFAC",
 	doneColor = "#C3C3C3"
 	
 function getCardTitle(card) {
@@ -13,7 +12,8 @@ function getCardTitle(card) {
 }
 
 function isStoryCard(card) {					
-	return getCardTitle(card).text().match(/\([0-9]*[.]*[0-9]*\)/i);
+	return getCardTitle(card).text().match(/\([0-9]*[.]*[0-9]*\)/i)
+	|| card.find("div.badge-points:not(:empty)").length > 0;
 }
 
 function isMantisCard(card) {					
@@ -29,67 +29,91 @@ function isDoneCard(card) {
 	return title.text().match(/-{3,}\s*done\s*-{3,}/i) || title.find("hr").length > 0;
 }
 
-function colorTasks() {
+function colorTasks(list) {
 	
-	$("div.list-cards").each(
+	list.find("div.list-cards").each(
+		function( index ) {
+		
+			var isAfterDone = false;
+			
+			$(this).find("div.list-card").each(
+				function(index2){				
+
+					if( isStoryCard($(this)) )
+					{
+						$(this).css("background-color",storyColor);
+					}
+					
+					if( isMantisCard($(this)) )
+					{
+						$(this).css("background-color",mantisColor);
+					}
+					
+					if( isTaskCard($(this)) )
+					{
+						$(this).css("background-color",taskColor);
+					}
+				}
+			)
+		}
+	);
+}
+
+function colorDoneTasks(list) {
+	list.find("div.list-cards").each(
 		function( index ) {
 		
 			var isAfterDone = false;
 			
 			$(this).find("div.list-card").each(
 				function(index2){
-				
-					var isDone = isDoneCard($(this)); 
 			
 					if( isAfterDone  ) {
 						$(this).css("background-color",doneColor);
 					}
-					else if(isDone) {
+					else if(isDoneCard($(this))) {
 					
 						var title = getCardTitle($(this));
 					
 						var isStyled = title.find("hr").length > 0;
 					
-						if( ! isStyled ) {
-							
-							title.contents().filter(
-								function(){ 
-								  return this.nodeType == 3; 
-								})[0].nodeValue = "";
+						if( ! isStyled ) {					
+							title.css("color","rgba(0,0,0,0)");
+							title.css("line-height","0px");
+							title.css("height","5px");
 								
 							title.append("<hr />");
-							$(this).css("background-color",doneColor);
+							title.find("hr").css("margin","0");
 						}
-					
+						
+						$(this).css("background-color",doneColor);
+							
 						isAfterDone = true;
 					}
-					else {
-
-						if( isStoryCard($(this)) )
-						{
-							$(this).css("background-color",storyColor);
-						}
-						
-						if( isMantisCard($(this)) )
-						{
-							$(this).css("background-color",mantisColor);
-						}
-						
-						if( isTaskCard($(this)) )
-						{
-							$(this).css("background-color",taskColor);
-						}
-					}
 				}
-			)
+			);
 		}
 	);
-	
+}
+
+function colorLanes() {
+	$("div.list").each(
+		function( index3 ) {
+			if( $(this).find("h2.list-header-name").text().match(/^\s*[0-9]+\s*\|/i) )
+			{
+				colorTasks( $(this) );
+				colorDoneTasks( $(this) );
+			}
+		}
+	)
 }
 
 // on DOM load
 $(function () {
     "use strict";	
 	
-    setInterval(colorTasks, 500);
+	if( $("span.board-header-btn-text").text().match(/ascent/i) ) {		
+		setInterval(colorLanes, 500);
+	};
+	
 });
