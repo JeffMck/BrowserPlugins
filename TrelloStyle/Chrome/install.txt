@@ -1,0 +1,6 @@
+To install:
+1. From the Chrome drawer open => Tools => Extensions
+2. On the Extensions page, check the Developer mode box
+3. Drag and drop the *.crx file onto the Extensions panel
+4. Check the Enable box for the plugin if needed
+5. Open a Trello page
