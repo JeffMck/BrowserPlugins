@@ -1,7 +1,6 @@
-// content.js
+// content-script.js
 
 window.URL = window.webkitURL || window.URL;
-
 
 var storyColor = "white",
 	mantisColor = "#F1A1B1",
